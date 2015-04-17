@@ -37,8 +37,9 @@ class MarkovMachine(object):
 
         key = choice(self.chains.keys())
         words = [key[0], key[1]]
+        count = len(key[0] + " " + key[1] + " ")
 
-        while key in self.chains:
+        while key in self.chains and count < 140:
             # Keep looping until we have a key that isn't in the chains
             # (which would mean it was the end of our original text)
             #
@@ -46,15 +47,22 @@ class MarkovMachine(object):
             # it would run for a very long time.
 
             word = choice(self.chains[key])
+            count = count + len(word) + 1 #Accounts for space
+            if count > 140:
+                break
             words.append(word)
             key = (key[1], word)
 
         text = " ".join(words)
 
-        # This is the clumsiest way to make sure it's never longer than
-        # 140 characters; can you think of better ways?
-        return text[:140]
+        return text
 
+class HalfAndHalfMixin(object):
+    """ First half of tweet from one markov chain dict. 
+        Second half from second markov chain dict. 
+        Requires specifically two sources."""
+
+    pass
 
 if __name__ == "__main__":
     filenames = sys.argv[1:]
